@@ -13,6 +13,8 @@ class Main extends Component {
     };
     this.handleFormSubmit = this.handleFormSubmit.bind(this)
     this.addNewCustomer = this.addNewCustomer.bind(this)
+    this.handleDelete = this.handleDelete.bind(this)
+    this.deleteCustomer = this.deleteCustomer.bind(this)
   }
 
   handleFormSubmit(name, company, job) {
@@ -29,9 +31,30 @@ class Main extends Component {
     })
   }
 
+  //function to merge new customer to existing array and create new array
   addNewCustomer(customer) {
     this.setState({
       customers: this.state.customers.concat(customer)
+    })
+  }
+
+  //receives customer's ID, sends Delete request to customer route with ID using fetch()
+  handleDelete(id) {
+    fetch(`http://localhost:3000/api/v1/customers/${id}`,{
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then((response) => {
+      this.deleteCustomer(id)
+      console.log('Customer was deleted!')
+    })
+  }
+
+  deleteCustomer(id) {
+    newCustomers = this.state.customers.filter((customer) => customer.id !== id)
+    this.setState({
+      customers: newCustomers
     })
   }
 
@@ -47,7 +70,7 @@ class Main extends Component {
     return(
       <div>
         <AddCustomer handleFormSubmit={this.handleFormSubmit} />
-        <Customers customers={this.state.customers} />
+        <Customers customers={this.state.customers}  handleDelete={this.handleDelete} />
       </div>      
     )
   }
