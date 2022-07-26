@@ -8,7 +8,7 @@ const Customers = (props) => {
   var customers = props.customers.map((customer) => {
     return(
       <div key={customer.id}>
-        <CustomerDetails customer={customer} handleDelete={props.handleDelete} />
+        <CustomerDetails customer={customer} handleDelete={props.handleDelete} handleUpdate={props.handleUpdate} />
       </div>
     )
   })

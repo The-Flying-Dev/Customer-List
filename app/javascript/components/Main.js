@@ -15,6 +15,8 @@ class Main extends Component {
     this.addNewCustomer = this.addNewCustomer.bind(this)
     this.handleDelete = this.handleDelete.bind(this)
     this.deleteCustomer = this.deleteCustomer.bind(this)
+    this.handleUpdate = this.handleUpdate.bind(this)
+    this.updateCustomer = this.updateCustomer.bind(this)
   }
 
   handleFormSubmit(name, company, job) {
@@ -46,17 +48,40 @@ class Main extends Component {
         'Content-Type': 'application/json'
       }
     }).then((response) => {
-      this.deleteCustomer(id)
-      console.log('Customer was deleted!')
+      this.deleteCustomer(id)      
     })
   }
 
   deleteCustomer(id) {
-    newCustomers = this.state.customers.filter((customer) => customer.id !== id)
+    let newCustomers = this.state.customers.filter((customer) => customer.id !== id)
     this.setState({
       customers: newCustomers
     })
   }
+
+
+
+  handleUpdate(customer) {
+    fetch(`http://localhost:3000/api/v1/customers/${customer.id}`,{
+      method: 'PUT',
+      body: JSON.stringify({customer: customer}),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then((response) => {
+      this.updateCustomer(customer)     
+    })
+  }
+
+  updateCustomer(customer) {
+    let newCustomers = this.state.customers.filter((f) => f.id !== customer.id)
+    newCustomers.push(customer)
+    this.setState({
+      customers: newCustomers
+    })
+  }
+
+  
 
    //lifecycle to fetch json data from Customers api controller
    componentDidMount() {
@@ -70,7 +95,11 @@ class Main extends Component {
     return(
       <div>
         <AddCustomer handleFormSubmit={this.handleFormSubmit} />
-        <Customers customers={this.state.customers}  handleDelete={this.handleDelete} />
+        <Customers 
+          customers={this.state.customers}  
+          handleDelete={this.handleDelete}
+          handleUpdate={this.handleUpdate} 
+        />
       </div>      
     )
   }

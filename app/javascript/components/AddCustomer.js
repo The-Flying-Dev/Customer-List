@@ -5,6 +5,7 @@ const AddCustomer = (props) => {
   let formFields = {};
 
   return(
+    
     <form onSubmit={ (e) => {
       e.preventDefault();
       props.handleFormSubmit(
